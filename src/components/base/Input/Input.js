@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Input = styled.input`
-  width: 15.5rem;
+  width: 16.5rem;
   height: 2.5rem;
   border-radius: 6px;
   padding: 0.5rem;
@@ -36,6 +36,7 @@ const Input = styled.input`
     font-size: 1.2rem;
     line-height: 1rem;
     margin-bottom: 3.5rem;
+    transition: top 3s ease-in-out;
 
     &:active {
       background: ${props => props.theme.buttonActiveColor};
@@ -45,6 +46,11 @@ const Input = styled.input`
       border-color: ${props => props.theme.buttonActiveColor};
     }
   }
+
+  &[type='email']:invalid {
+    border: 0.063rem solid red;
+  }
 `;
+
 
 export { Input };

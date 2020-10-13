@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import GlobalStyle from './globalStyles.js';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -10,7 +11,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={ lightTheme }>
       <GlobalStyle />
-      <App />
+      <Router>  
+        <App />
+      </Router>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -1,28 +1,34 @@
 import React, { useState } from "react";
-import { Container } from './styles';
+import { Route, Link } from 'react-router-dom';
+import { Transition } from 'react-transition-group';
+import { LoginContainer } from './styles';
 import { Input } from '../../base/Input/Input';
 import image from './leapLogo.png';
 import { H1 } from '../../base/Text/Text';
 
-export default function Login (props) {
-  const [visible, setVisible] = useState(false);
+
+const duration = 300;
+
+const defaultFadeStyle = {
+  transition: `opacity ${duration}ms ease-in-out`,
+  opacity: 0,
+}
+
+const fadeTransitionStyles = {
+  entering: { opacity: 0 },
+  entered:  { opacity: 1 },
+  exiting:  { opacity: 0 },
+  exited:  { opacity: 0 },
+};
+
+
+function LoginWrapper (props) {
+  const [signup, setSignup] = useState(false);
 
   return (
-    <Container>
-      <img 
-        src={image} 
-        alt='Leap Logo'  
-        style={{
-          width: '4rem',
-          height: '4rem',
-          marginTop: '9vh',
-          boxShadow: '0px 6px 10px rgba(0, 0 , 0, 0.3), -6px -6px 10px rgba(0, 0 , 0, 0.3) ',
-          borderRadius: '6px',
-        }}
-      />
-
+    <>
       <div>
-        <H1>{visible ? 'Create' : 'Login'} your Account</H1>
+        <H1>{signup ? 'Create' : 'Login to'} your Account</H1>
 
         <label htmlFor='email'></label>
         <Input 
@@ -30,22 +36,36 @@ export default function Login (props) {
           name='email' 
           type='email' 
           placeholder='Email' 
+          pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
         />
 
         <label htmlFor='password'></label>
         <Input id='password' name='password' type='password' placeholder='Password' />
 
-        {
-          visible ? 
-          <>
-            <label htmlFor='confirm-password'></label>
-            <Input id='confirm-password' name='confirm-password' type='password' placeholder='Confirm Password' /> 
-          </> : ""
-        }
+        <Transition 
+          in={signup} timeout={duration} 
+          mountOnEnter={true} unmountOnExit={true} 
+          appear={signup}
+        >
+          {state => (
+            <>
+              <label 
+                style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state] }} 
+                htmlFor='confirm-password'
+              ></label>
+              <Input 
+                id='confirm-password' 
+                name='confirm-password' 
+                type='password' 
+                style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state] }}
+                placeholder='Confirm Password' />
+            </>
+          )}
+        </Transition>
 
-        <Input type='submit' value={`Sign ${visible ? 'Up' : 'In'}`} />
+        <Input type='submit' value={`Sign ${signup ? 'Up' : 'In'}`} />
 
-        <span>or Sign {visible ? 'up' : 'in'} with</span>
+        <span>or Sign {signup ? 'up' : 'in'} with</span>
       </div>
       
       {/* 
@@ -56,14 +76,83 @@ export default function Login (props) {
       <div>
         <div>
           <Input type='button' value='Google' /><br/>
-          <p>{visible ? 'Already have an account?' : 'Don\'t have an account?'}
-            <a href="#" onClick={() => setVisible(!visible)}>
-              {visible ? " Login in" : " Sign up"} here
+          <p>{signup ? 'Already have an account?' : 'Don\'t have an account?'}
+            <a onClick={() => setSignup(!signup)}>
+              {signup ? " Login in" : " Sign up"} here
             </a>
           </p>
         </div>
-        <a href="#">Forgot password?</a>
       </div>
-    </Container>
+
+      <div>
+        <Transition 
+          in={!signup} timeout={duration} 
+          mountOnEnter={true} unmountOnExit={true} 
+          appear={!signup}
+        >
+          {state => (
+            <Link
+              to='/login/forgotten-password'
+              href="#" 
+              style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state]}} 
+            >
+              Forgotten password?
+            </Link>
+          )}
+        </Transition>
+      </div>
+    </>
+  )
+}
+
+
+function ForgetPassword (props) {
+  return (
+    <div>
+      <H1 style={{ marginBottom: '1.5vh' }}>Forgot your password?</H1>
+
+      <p>
+        No worries! Enter your email and we'll send you a reset.
+      </p>
+
+      <Input 
+        id='email' 
+        name='email' 
+        type='email' 
+        placeholder='Email Address' 
+        pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+      />
+
+      <Input type='submit' value='Send' />
+    </div>
+  )
+}
+
+
+
+
+export default function Login (props) {
+  return (
+    <LoginContainer>
+      <img 
+        src={image} 
+        alt='Leap Logo'  
+        style={{
+          width: '4rem',
+          height: '4rem',
+          margin: '9vh auto 2vh auto',
+          boxShadow: '0px 6px 10px rgba(0, 0 , 0, 0.3), -6px -6px 10px rgba(0, 0 , 0, 0.3) ',
+          borderRadius: '6px',
+        }}
+      />
+
+      <Route path='/login/forgotten-password'>
+        <ForgetPassword />
+      </Route>
+      
+      <Route exact path='/login'>
+        <LoginWrapper />
+      </Route>
+    </LoginContainer>
   )
 }

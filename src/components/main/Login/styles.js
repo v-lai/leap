@@ -1,12 +1,7 @@
 import styled from 'styled-components';
+import { Container } from '../../base/Container/Container';
 
-const Container = styled.div`
-  background: ${props => props.theme.bgColor};
-  width: 100vw; height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+const LoginContainer = styled(Container)`
   & > div {
     display: flex;
     flex-direction: column;
@@ -14,6 +9,13 @@ const Container = styled.div`
     height: auto;
     align-items: center;
     flex: 0 1 auto;
+
+    & > p {
+      width: 19.5rem;
+      text-align: center;
+      color: ${props => props.theme.fgColor};
+      margin-bottom: 4vh;
+    }
   }
 
   & > div:nth-child(2) {
@@ -43,7 +45,7 @@ const Container = styled.div`
     }
   }
 
-  & > div:last-child {
+  & > div:nth-child(3) {
     flex: 1 1 auto;
     justify-content: space-evenly;
 
@@ -62,12 +64,14 @@ const Container = styled.div`
       }
       
     }
+  }
 
-    & > a {
-      color: ${props => props.theme.mutedColor};
-      font-size: 0.8rem;
-    }
+  & > div:nth-child(4) {
+    flex: 1 1 auto;
+    justify-content: center;
+    color: ${props => props.theme.mutedColor};
+    font-size: 0.8rem;
   }
 `;
 
-export { Container };
+export { LoginContainer };
