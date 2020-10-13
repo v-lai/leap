@@ -6,7 +6,10 @@ import {
   Link
 } from 'react-router-dom';
 import Skills from './components/Skills';
+import CreateTask from './components/CreateTask';
+import TaskManagement from './components/TaskManagement';
 
+// TODO: comment out nav to see without scaffolding
 function App() {
   return (
     <Router>
@@ -21,6 +24,9 @@ function App() {
           <li>
             <Link to="/createtask">Create Task</Link>
           </li>
+          <li>
+            <Link to="/tasks">Task Management</Link>
+          </li>
         </ul>
       </nav>
       <Switch>
@@ -28,7 +34,10 @@ function App() {
           <Skills />
         </Route>
         <Route path="/createtask">
-          <div>Create Task</div>
+          <CreateTask />
+        </Route>
+        <Route path="/tasks">
+          <TaskManagement />
         </Route>
         <Route path="/">
           <div>Home</div>
