@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '../../base/Button/Button';
 
 const COLOR_OPTIONS = [
   '#FF8074',
@@ -37,8 +38,8 @@ const SkillColorOptions = ({ skillColor, setColorSelection, done }) => (
         aria-label={`color-${color}`}
         style={{
           backgroundColor: color,
-          height: '20px',
-          width: '20px',
+          height: '1.5rem',
+          width: '1.5rem',
           MozBorderRadius: '50%',
           WebkitBorderRadius: '50%',
           borderRadius: '50%',
@@ -48,14 +49,14 @@ const SkillColorOptions = ({ skillColor, setColorSelection, done }) => (
         onClick={() => setColorSelection(color)}
       />
     ))}
-    <button
+    <Button
       type="button"
       className="button"
-      style={{ gridColumnStart: 4 }}
+      style={{ gridColumnStart: 4, lineHeight: '1rem' }}
       onClick={() => done(false)}
     >
       Done
-    </button>
+    </Button>
   </div>
 );
 

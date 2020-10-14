@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-date-picker';
 import SkillColorOptions from './SkillColorOptions';
-import { useHistory } from 'react-router-dom';
-import './CreateTask.css';
+import { Input } from '../../base/Input/Input';
+import { Button } from '../../base/Button/Button';
+import { Container } from './styles';
+// import { useHistory } from 'react-router-dom';
 
 const TIME_OF_DAY = ['Morning', 'Afternoon', 'Evening', 'All Day'];
 const TIME_OF_DAY_MAP = {
@@ -13,7 +15,7 @@ const TIME_OF_DAY_MAP = {
 };
 const TASK_TYPE = ['One-Time', 'Recurring'];
 
-const CreateTask = () => {
+const CreateTask = (props) => {
   const [taskName, setTaskName] = useState('');
   const [displayColorSelection, showColorSelection] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -23,7 +25,7 @@ const CreateTask = () => {
   const [taskType, setTaskType] = useState(null);
   const [repeat, setRepeating] = useState(null);
   const [everyRepeat, setEveryRepeat] = useState(null);
-  let history = useHistory();
+  // let history = useHistory();
 
   const resetAll = () => {
     setTaskName('');
@@ -55,21 +57,20 @@ const CreateTask = () => {
     );
     // set values for defaults if not required
     // save & push to next task management screen
-    history.push('/tasks');
-  }
+    // history.push('/tasks'); // TODO: uncomment when routing is in place
+  };
 
   return (
-    <div style={{ padding: '2rem 1.5rem', fontWeight: '600' }}>
+    <Container>
       <div>
         <label htmlFor="taskName">Task Name*</label>
-        <br />
-        <input
+        <Input
           type="text"
           id="taskName"
           name="taskName"
-          className="input"
           style={{
-            width: 'calc(100% - 20px)',
+            display: 'table',
+            width: 'min(80vw, 400px)',
           }}
           value={taskName}
           onChange={({ target }) => setTaskName(target.value)}
@@ -77,13 +78,18 @@ const CreateTask = () => {
           required
         />
       </div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        {/* <input type="color" id="skill-color" name="skill-color" /> */}
-        <p style={{ fontWeight: '400' }}>Skill Color</p>
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      >
+        <p>Skill Color</p>
         <button
           type="button"
           aria-label="selected-color"
           style={{
+            display: 'table',
             marginLeft: '1rem',
             backgroundColor: skillColor,
             height: '20px',
@@ -107,7 +113,7 @@ const CreateTask = () => {
           <br />
         </>
       )}
-      <div style={{ fontWeight: '400', paddingBottom: '0.8rem' }}>
+      <div>
         <label htmlFor="start-date" style={{ marginRight: '1rem' }}>
           Start Date
         </label>
@@ -118,7 +124,7 @@ const CreateTask = () => {
           calendarType="US"
         />
       </div>
-      <div style={{ fontWeight: '400', paddingBottom: '1.5rem' }}>
+      <div>
         <label htmlFor="end-date" style={{ marginRight: '1.4rem' }}>
           End Date
         </label>
@@ -133,7 +139,6 @@ const CreateTask = () => {
         style={{
           fontWeight: '400',
           textAlign: 'center',
-          paddingBottom: '1rem',
         }}
       >
         <p>I want to do this task in the</p>
@@ -144,18 +149,20 @@ const CreateTask = () => {
             gridTemplateRows: '1.5fr',
             columnGap: '1em',
             justifyItems: 'stretch',
-            fontSize: '0.8em',
             paddingBottom: '1rem',
+            paddingTop: '0.5rem',
           }}
         >
           {TIME_OF_DAY.map((time) => (
-            <button
+            <Button
               key={TIME_OF_DAY_MAP[time]}
               aria-label={TIME_OF_DAY_MAP[time]}
               type="button"
               onClick={() => setTimeOfDay(time)}
               className="button"
               style={{
+                fontSize: '0.7rem',
+                lineHeight: '1rem',
                 boxShadow:
                   time === timeOfDay
                     ? '0 2pt 4pt rgba(0, 0, 0, 0.8)'
@@ -163,19 +170,20 @@ const CreateTask = () => {
               }}
             >
               {time}
-            </button>
+            </Button>
           ))}
         </div>
-        <div style={{ fontWeight: '400', textAlign: 'center' }}>
+      </div>
+      <div>
+        <div style={{ textAlign: 'center' }}>
           <p>What type of task is this?*</p>
           {TASK_TYPE.map((task) => (
-            <button
+            <Button
               type="button"
               className="button"
               key={task.toLowerCase()}
               aria-label={task.toLowerCase()}
               style={{
-                lineHeight: '2rem',
                 margin: '0.4rem',
                 minWidth: '60%',
                 boxShadow:
@@ -186,7 +194,7 @@ const CreateTask = () => {
               onClick={() => setTaskType(task.toLowerCase())}
             >
               {task}
-            </button>
+            </Button>
           ))}
           {taskType === 'recurring' && (
             <div style={{ padding: '0.8rem 0.5rem' }}>
@@ -229,30 +237,34 @@ const CreateTask = () => {
           justifyItems: 'center',
         }}
       >
-        <button
+        <Button
           type="button"
           className="button"
           aria-label="cancel"
           style={{
             backgroundColor: '#FFA865',
+            minWidth: '40%',
+            lineHeight: '1.5rem',
           }}
           onClick={() => resetAll()}
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
           className="button"
           aria-label="save"
           style={{
             backgroundColor: '#FFA865',
+            minWidth: '40%',
+            lineHeight: '1.5rem',
           }}
           onClick={() => validateAndSave()}
         >
           Save
-        </button>
+        </Button>
       </div>
-    </div>
+    </Container>
   );
 };
 
