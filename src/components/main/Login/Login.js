@@ -87,13 +87,11 @@ function LoginWrapper (props) {
       <div>
         <Transition 
           in={!signup} timeout={duration} 
-          mountOnEnter={true} unmountOnExit={true} 
-          appear={!signup}
+          mountOnEnter={true} unmountOnExit={true}
         >
           {state => (
             <Link
               to='/login/forgotten-password'
-              href="#" 
               style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state]}} 
             >
               Forgotten password?
@@ -108,23 +106,31 @@ function LoginWrapper (props) {
 
 function ForgetPassword (props) {
   return (
-    <div>
-      <H1 style={{ marginBottom: '1.5vh' }}>Forgot your password?</H1>
+    <>
+      <div>
+        <H1 style={{ marginBottom: '1.5vh' }}>Forgot your password?</H1>
 
-      <p>
-        No worries! Enter your email and we'll send you a reset.
-      </p>
+        <p>
+          No worries! Enter your email and we'll send you a reset.
+        </p>
 
-      <Input 
-        id='email' 
-        name='email' 
-        type='email' 
-        placeholder='Email Address' 
-        pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
-      />
+        <Input 
+          id='email' 
+          name='email' 
+          type='email' 
+          placeholder='Email Address' 
+          pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        />
 
-      <Input type='submit' value='Send' />
-    </div>
+        <Input type='submit' value='Send' />
+      </div>
+
+      <div>
+        <Link to='/login'>
+          Return to Log in
+        </Link>
+      </div>
+    </>
   )
 }
 

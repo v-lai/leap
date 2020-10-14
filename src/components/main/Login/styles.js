@@ -20,6 +20,7 @@ const LoginContainer = styled(Container)`
 
   & > div:nth-child(2) {
     padding: 3vh 0;
+    flex: 1 0 auto;
 
     & > input[type='submit'] ~ span {
       position: relative;
@@ -66,7 +67,7 @@ const LoginContainer = styled(Container)`
     }
   }
 
-  & > div:nth-child(4) {
+  & > div:last-child {
     flex: 1 1 auto;
     justify-content: center;
     color: ${props => props.theme.mutedColor};
