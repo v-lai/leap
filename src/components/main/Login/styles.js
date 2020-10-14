@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Container } from '../../base/Container/Container';
 
 const LoginContainer = styled(Container)`
-  div {
+  div, form {
     display: flex;
     flex-direction: column;
     width: 100vw;
@@ -33,7 +33,7 @@ const LoginContainer = styled(Container)`
     overflow: hidden;
   }
 
-  div:first-of-type {
+  form {
     padding: 3vh 0;
     flex: 1 0 auto;
 
@@ -61,7 +61,7 @@ const LoginContainer = styled(Container)`
     }
   }
 
-  div:nth-of-type(2) {
+  div:first-of-type {
     flex: 1 1 auto;
     justify-content: space-evenly;
 

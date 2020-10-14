@@ -6,14 +6,27 @@ import { Input } from '../../base/Input/Input';
 import image from './leapLogo.png';
 import { H1 } from '../../base/Text/Text';
 
+const EMAIL_REGEX= /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
 
 function LoginWrapper (props) {
-  const [signup, setSignup] = useState(false);
+  const [values, setValues] = useState({
+    email: '', password: '', confirmPassword: '', signup: false
+  });
+  const updateValue = (e) => {
+    if (e.target.name === 'email' && e.target.value.match(EMAIL_REGEX)) {
+      setValues({ ...values, email: e.target.value });
+    }
+
+    setValues({ ...values, [e.target.name]: e.target.value });
+  }
+
+
 
   return (
     <>
-      <div>
-        <H1>{signup ? 'Create' : 'Login to'} your Account</H1>
+      <form>
+        <H1>{values.signup ? 'Create' : 'Login to'} your Account</H1>
 
         <label htmlFor='email'>
           <Input 
@@ -21,7 +34,8 @@ function LoginWrapper (props) {
             name='email' 
             type='email' 
             placeholder='Email' 
-            pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$' 
+            pattern={EMAIL_REGEX.source} 
+            onChange={updateValue}
           />
           <span>Invalid Email!</span>
         </label>
@@ -32,7 +46,7 @@ function LoginWrapper (props) {
 
         <label 
           htmlFor='confirm-password' 
-          className={`${signup ? 'animateHeight' : ''} normalHeight`}
+          className={`${values.signup ? 'animateHeight' : ''} normalHeight`}
           style={{ 
             willChange: 'opacity, visibility, max-height',
             transition: 'opacity 0.5s, visibility 0.5s, max-height 0.7s',
@@ -41,16 +55,16 @@ function LoginWrapper (props) {
         >
           <Input 
             id='confirm-password' 
-            name='confirm-password' 
+            name='confirmPassword' 
             type='password' 
             placeholder='Confirm Password' 
           />
         </label>
 
-        <Input type='submit' value={`Sign ${signup ? 'Up' : 'In'}`} />
+        <Input type='submit' value={`Sign ${values.signup ? 'Up' : 'In'}`} />
 
-        <span>or Sign {signup ? 'up' : 'in'} with</span>
-      </div>
+        <span>or Sign {values.signup ? 'up' : 'in'} with</span>
+      </form>
       
       
 
@@ -58,21 +72,21 @@ function LoginWrapper (props) {
       <div>
         <div>
           <Input type='button' value='Google' /><br/>
-          <p>{signup ? 'Already have an account?' : 'Don\'t have an account?'}
-            <a onClick={() => setSignup(!signup)}>
-              {signup ? " Login in" : " Sign up"} here
+          <p>{values.signup ? 'Already have an account?' : 'Don\'t have an account?'}
+            <a onClick={() => setValues({...values, signup: !values.signup})}>
+              {values.signup ? " Login in" : " Sign up"} here
             </a>
           </p>
         </div>
       </div>
 
       <div
-        className={`${!signup ? 'animateHeight' : ''} normalHeight`}
+        className={`${!values.signup ? 'animateHeight' : ''} normalHeight`}
         style={{ 
           willChange: 'opacity, max-height, visibility',
-          transition: 'opacity 0.5s, visibility 0.5s, max-height 0.1s', 
+          transition: 'opacity 0.5s, visibility 0.5s, max-height 0.15s', 
           transitionTimingFunction: 'ease-out',
-          transitionDelay: `${!signup ? '0.5s' : '0s'}`
+          transitionDelay: `${!values.signup ? '0.5s' : '0s'}`
         }}
       >
         <Link to='/login/recover-your-account'>
