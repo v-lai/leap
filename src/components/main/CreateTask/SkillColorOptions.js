@@ -20,44 +20,44 @@ const COLOR_OPTIONS = [
   '#C8AAD0',
 ];
 
-const SkillColorOptions = ({ skillColor, setColorSelection, done }) => (
-  <div
-    style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
-      gridTemplateRows: '50px 50px 50px 50px 30px',
-      justifyItems: 'center',
-      alignItems: 'center',
-      backgroundColor: '#FFF',
-    }}
-  >
-    {COLOR_OPTIONS.map((color) => (
-      <button
-        key={color}
-        type="button"
-        aria-label={`color-${color}`}
-        style={{
-          backgroundColor: color,
-          height: '1.5rem',
-          width: '1.5rem',
-          MozBorderRadius: '50%',
-          WebkitBorderRadius: '50%',
-          borderRadius: '50%',
-          KhtmlBorderRadius: '50%',
-          border: color === skillColor ? '2px solid black' : 'none',
-        }}
-        onClick={() => setColorSelection(color)}
-      />
-    ))}
-    <Button
-      type="button"
-      className="button"
-      style={{ gridColumnStart: 4, lineHeight: '1rem' }}
-      onClick={() => done(false)}
+export default function SkillColorOptions ({ skillColor, setColorSelection, done }) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        gridTemplateRows: '50px 50px 50px 50px 30px',
+        justifyItems: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFF',
+      }}
     >
-      Done
-    </Button>
-  </div>
-);
-
-export default SkillColorOptions;
+      {COLOR_OPTIONS.map((color) => (
+        <button
+          key={color}
+          type="button"
+          aria-label={`color-${color}`}
+          style={{
+            backgroundColor: color,
+            height: '1.5rem',
+            width: '1.5rem',
+            MozBorderRadius: '50%',
+            WebkitBorderRadius: '50%',
+            borderRadius: '50%',
+            KhtmlBorderRadius: '50%',
+            border: color === skillColor ? '2px solid black' : 'none',
+          }}
+          onClick={() => setColorSelection(color)}
+        />
+      ))}
+      <Button
+        type="button"
+        className="button"
+        style={{ gridColumnStart: 4, lineHeight: '1rem' }}
+        onClick={() => done(false)}
+      >
+        Done
+      </Button>
+    </div>
+  );
+};

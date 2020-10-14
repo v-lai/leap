@@ -4,7 +4,7 @@ import SkillColorOptions from './SkillColorOptions';
 import { Input } from '../../base/Input/Input';
 import { Button } from '../../base/Button/Button';
 import { Container } from './styles';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const TIME_OF_DAY = ['Morning', 'Afternoon', 'Evening', 'All Day'];
 const TIME_OF_DAY_MAP = {
@@ -15,7 +15,7 @@ const TIME_OF_DAY_MAP = {
 };
 const TASK_TYPE = ['One-Time', 'Recurring'];
 
-const CreateTask = (props) => {
+export default function CreateTask (props) {
   const [taskName, setTaskName] = useState('');
   const [displayColorSelection, showColorSelection] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -25,7 +25,7 @@ const CreateTask = (props) => {
   const [taskType, setTaskType] = useState(null);
   const [repeat, setRepeating] = useState(null);
   const [everyRepeat, setEveryRepeat] = useState(null);
-  // let history = useHistory();
+  let history = useHistory();
 
   const resetAll = () => {
     setTaskName('');
@@ -57,7 +57,7 @@ const CreateTask = (props) => {
     );
     // set values for defaults if not required
     // save & push to next task management screen
-    // history.push('/tasks'); // TODO: uncomment when routing is in place
+    history.push('/tasks');
   };
 
   return (
@@ -267,5 +267,3 @@ const CreateTask = (props) => {
     </Container>
   );
 };
-
-export default CreateTask;
