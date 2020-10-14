@@ -9,6 +9,7 @@ const Task = ({ color, text }) => (
       borderRadius: '0.5rem',
       boxShadow: '0 4pt 4pt rgba(0, 0 , 0, 0.25)',
       display: 'flex',
+      alignContent: 'center',
     }}
   >
     <p
@@ -28,4 +29,4 @@ const Task = ({ color, text }) => (
   </div>
 );
 
-export default Task;
+export { Task };

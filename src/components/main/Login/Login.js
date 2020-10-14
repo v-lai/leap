@@ -7,21 +7,6 @@ import image from './leapLogo.png';
 import { H1 } from '../../base/Text/Text';
 
 
-const duration = 300;
-
-const defaultFadeStyle = {
-  transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 0,
-}
-
-const fadeTransitionStyles = {
-  entering: { opacity: 0 },
-  entered:  { opacity: 1 },
-  exiting:  { opacity: 0 },
-  exited:  { opacity: 0 },
-};
-
-
 function LoginWrapper (props) {
   const [signup, setSignup] = useState(false);
 
@@ -30,38 +15,35 @@ function LoginWrapper (props) {
       <div>
         <H1>{signup ? 'Create' : 'Login to'} your Account</H1>
 
-        <label htmlFor='email'></label>
-        <Input 
-          id='email' 
-          name='email' 
-          type='email' 
-          placeholder='Email' 
-          pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
-        />
+        <label htmlFor='email'>
+          <Input 
+            id='email' 
+            name='email' 
+            type='email' 
+            placeholder='Email' 
+            pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+          />
+          <span>Invalid Email!</span>
+        </label>
 
-        <label htmlFor='password'></label>
-        <Input id='password' name='password' type='password' placeholder='Password' />
+        <label htmlFor='password'>
+          <Input id='password' name='password' type='password' placeholder='Password' />
+        </label>
 
-        <Transition 
-          in={signup} timeout={duration} 
-          mountOnEnter={true} unmountOnExit={true} 
-          appear={signup}
+        <label 
+          htmlFor='confirm-password' 
+          className={`${signup ? 'animateHeight' : ''} normalHeight`}
+          style={{ 
+            transition: 'opacity 0.5s, visibility 0.5s, max-height 0.7s',
+            transitionTimingFunction: 'ease-in-out', 
+          }}
         >
-          {state => (
-            <>
-              <label 
-                style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state] }} 
-                htmlFor='confirm-password'
-              ></label>
-              <Input 
-                id='confirm-password' 
-                name='confirm-password' 
-                type='password' 
-                style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state] }}
-                placeholder='Confirm Password' />
-            </>
-          )}
-        </Transition>
+          <Input 
+            id='confirm-password' 
+            name='confirm-password' 
+            type='password' 
+            placeholder='Confirm Password' />
+        </label>
 
         <Input type='submit' value={`Sign ${signup ? 'Up' : 'In'}`} />
 
@@ -84,20 +66,17 @@ function LoginWrapper (props) {
         </div>
       </div>
 
-      <div>
-        <Transition 
-          in={!signup} timeout={duration} 
-          mountOnEnter={true} unmountOnExit={true}
-        >
-          {state => (
-            <Link
-              to='/login/forgotten-password'
-              style={{ ...defaultFadeStyle, ...fadeTransitionStyles[state]}} 
-            >
-              Forgotten password?
-            </Link>
-          )}
-        </Transition>
+      <div
+        className={`${!signup ? 'animateHeight' : ''} normalHeight`}
+        style={{
+          transition: 'opacity 0.5s, max-height 0.1s', 
+          transitionTimingFunction: 'ease-out',
+          transitionDelay: `${!signup ? '0.5s' : '0s'}`
+        }}
+      >
+        <Link to='/login/recover-your-account'>
+          Forgotten password?
+        </Link>
       </div>
     </>
   )
@@ -152,7 +131,7 @@ export default function Login (props) {
         }}
       />
 
-      <Route path='/login/forgotten-password'>
+      <Route path='/login/recover-your-account'>
         <ForgetPassword />
       </Route>
       

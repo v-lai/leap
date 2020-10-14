@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Container } from '../../base/Container/Container';
 
 const LoginContainer = styled(Container)`
-  & > div {
+  div {
     display: flex;
     flex-direction: column;
     width: 100vw;
@@ -18,11 +18,29 @@ const LoginContainer = styled(Container)`
     }
   }
 
-  & > div:nth-child(2) {
+  .animateHeight {
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: auto;
+    max-height: 500px !important;
+  }
+
+  .normalHeight {
+    max-height: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+  }
+
+  div:first-of-type {
     padding: 3vh 0;
     flex: 1 0 auto;
+    
+    label[for='confirm-password'] {
+      
+    }
 
-    & > input[type='submit'] ~ span {
+    input[type='submit'] ~ span {
       position: relative;
       width: 15.5rem;
       text-align: center;
@@ -46,7 +64,7 @@ const LoginContainer = styled(Container)`
     }
   }
 
-  & > div:nth-child(3) {
+  div:nth-of-type(2) {
     flex: 1 1 auto;
     justify-content: space-evenly;
 
@@ -67,7 +85,7 @@ const LoginContainer = styled(Container)`
     }
   }
 
-  & > div:last-child {
+  div:last-of-type {
     flex: 1 1 auto;
     justify-content: center;
     color: ${props => props.theme.mutedColor};

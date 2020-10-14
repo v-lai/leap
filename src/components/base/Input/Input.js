@@ -48,7 +48,26 @@ const Input = styled.input`
   }
 
   &[type='email']:invalid {
-    border: 0.063rem solid red;
+    border-color: transparent;
+    border-bottom: 0.15rem solid ${props => props.theme.errorColor};
+
+    & + span {
+      opacity: 1;
+      height: auto;
+      max-height: 50px;
+    }
+  }
+
+  &[type='email'] + span {
+    display: block;
+    color: ${props => props.theme.errorColor};
+    margin-top: -3vh;
+    margin-bottom: 2vh;
+    font-size: 0.7rem;
+    opacity: 0;
+    overflow: hidden;
+    max-height: 0px;
+    transition: opacity 1s ease-in-out, max-height 1s ease-in-out;
   }
 `;
 

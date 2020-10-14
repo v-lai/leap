@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container } from './styles';
-import Task from './Task';
+import { TaskManageContainer } from './styles';
+import { Task } from './Task';
 
 const DAYS_IN_WEEK = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
 const MONTHS_IN_YEAR = [
@@ -59,7 +59,7 @@ const TaskManagement = () => {
   const { month, datesInWeek, today, flip } = setUpWeekView();
   return (
     <>
-      <Container>
+      <TaskManageContainer>
         <div
           style={{
             border: 'none',
@@ -73,8 +73,8 @@ const TaskManagement = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
-            gridTemplateRows: '1fr 1fr',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gridTemplateRows: 'repeat(2, 1fr)',
             gridRowGap: '10px',
           }}
         >
@@ -131,7 +131,7 @@ const TaskManagement = () => {
           <Task color="#FFA865" text="Learn how to conduct user interviews" />
           <Task color="#FFA865" text="Watch video on research methods" />
         </div>
-      </Container>
+      </TaskManageContainer>
       <div
         style={{
           backgroundColor: '#facb99',
