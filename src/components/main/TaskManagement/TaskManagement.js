@@ -55,7 +55,7 @@ const setUpWeekView = () => {
   return { month, datesInWeek, today, flip };
 };
 
-export default function TaskManagement () {
+const TaskManagement = () => {
   const { month, datesInWeek, today, flip } = setUpWeekView();
   return (
     <>
@@ -150,3 +150,5 @@ export default function TaskManagement () {
     </>
   );
 };
+
+export default TaskManagement;
