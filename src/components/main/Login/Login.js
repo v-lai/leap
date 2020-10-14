@@ -21,7 +21,7 @@ function LoginWrapper (props) {
             name='email' 
             type='email' 
             placeholder='Email' 
-            pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+            pattern='^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$' 
           />
           <span>Invalid Email!</span>
         </label>
@@ -34,6 +34,7 @@ function LoginWrapper (props) {
           htmlFor='confirm-password' 
           className={`${signup ? 'animateHeight' : ''} normalHeight`}
           style={{ 
+            willChange: 'opacity, visibility, max-height',
             transition: 'opacity 0.5s, visibility 0.5s, max-height 0.7s',
             transitionTimingFunction: 'ease-in-out', 
           }}
@@ -42,7 +43,8 @@ function LoginWrapper (props) {
             id='confirm-password' 
             name='confirm-password' 
             type='password' 
-            placeholder='Confirm Password' />
+            placeholder='Confirm Password' 
+          />
         </label>
 
         <Input type='submit' value={`Sign ${signup ? 'Up' : 'In'}`} />
@@ -50,11 +52,9 @@ function LoginWrapper (props) {
         <span>or Sign {signup ? 'up' : 'in'} with</span>
       </div>
       
-      {/* 
-        There's a reason why I seperated out this one click login into
-        seperate `div`. If we were to ever create a desktop view then this
-        will go in right side. We can use `@media` query for that. :D
-      */}
+      
+
+
       <div>
         <div>
           <Input type='button' value='Google' /><br/>
@@ -68,8 +68,9 @@ function LoginWrapper (props) {
 
       <div
         className={`${!signup ? 'animateHeight' : ''} normalHeight`}
-        style={{
-          transition: 'opacity 0.5s, max-height 0.1s', 
+        style={{ 
+          willChange: 'opacity, max-height, visibility',
+          transition: 'opacity 0.5s, visibility 0.5s, max-height 0.1s', 
           transitionTimingFunction: 'ease-out',
           transitionDelay: `${!signup ? '0.5s' : '0s'}`
         }}

@@ -9,6 +9,7 @@ const LoginContainer = styled(Container)`
     height: auto;
     align-items: center;
     flex: 0 1 auto;
+    transform: translateZ(0);
 
     & > p {
       width: 19.5rem;
@@ -35,10 +36,6 @@ const LoginContainer = styled(Container)`
   div:first-of-type {
     padding: 3vh 0;
     flex: 1 0 auto;
-    
-    label[for='confirm-password'] {
-      
-    }
 
     input[type='submit'] ~ span {
       position: relative;
