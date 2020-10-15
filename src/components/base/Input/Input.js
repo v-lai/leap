@@ -47,21 +47,26 @@ const Input = styled.input`
     }
   }
 
-  &[type='email']:invalid {
-    border-color: transparent;
-    border-bottom: 0.15rem solid ${props => props.theme.errorColor};
+  ${ ({ validate, theme }) => validate && `
+    &[type='email']:invalid, 
+    &[type='password']:invalid {
+      border-color: transparent;
+      border-bottom: 0.15rem solid ${theme.errorColor};
 
-    & + span {
-      opacity: 1;
-      height: auto;
-      max-height: 50px;
+      & + span {
+        opacity: 1;
+        height: auto;
+        max-height: 50px;
+      }
     }
-  }
+  `}
 
-  &[type='email'] + span {
+  &[type='email'] + span, 
+  &[type='password'] + span {
     display: block;
+    width: 16.5rem;
     color: ${props => props.theme.errorColor};
-    margin-top: -3vh;
+    margin-top: -2.7vh;
     margin-bottom: 2vh;
     font-size: 0.7rem;
     opacity: 0;

@@ -6,9 +6,7 @@ const LoginContainer = styled(Container)`
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: auto;
     align-items: center;
-    flex: 0 1 auto;
     transform: translateZ(0);
 
     & > p {
@@ -34,8 +32,8 @@ const LoginContainer = styled(Container)`
   }
 
   form {
-    padding: 3vh 0;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
+    padding-top: 3vh;
 
     input[type='submit'] ~ span {
       position: relative;
@@ -62,23 +60,19 @@ const LoginContainer = styled(Container)`
   }
 
   div:first-of-type {
-    flex: 1 1 auto;
-    justify-content: space-evenly;
+    flex: 1 0 auto;
+    justify-content: flex-start;
+    text-align: center;
 
-    & > div {
-      text-align: center;
+    p {
+      font-size: 0.7rem;
+      color: ${props => props.theme.mutedColor};
+      margin-top: -1.5vh;
 
-      & > p {
-        font-size: 0.7rem;
-        color: ${props => props.theme.mutedColor};
-        margin-top: -1.5vh;
-
-        & > a {
-          text-decoration: none;
-          color: ${props => props.theme.fgColor}; 
-        }
+      a {
+        text-decoration: none;
+        color: ${props => props.theme.fgColor}; 
       }
-      
     }
   }
 
@@ -87,6 +81,7 @@ const LoginContainer = styled(Container)`
     justify-content: center;
     color: ${props => props.theme.mutedColor};
     font-size: 0.8rem;
+    max-height: 10vh;
   }
 `;
 
