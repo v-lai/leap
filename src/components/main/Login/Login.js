@@ -102,7 +102,7 @@ function LoginWrapper (props) {
         }}
       >
         <Link to='/login/recover-your-account'>
-          Forgotten password?
+          Forgot password?
         </Link>
       </div>
     </>
