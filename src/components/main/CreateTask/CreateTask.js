@@ -9,6 +9,7 @@ import * as locale from 'rmc-date-picker/lib/locale/en_US';
 import 'rmc-picker/assets/index.css';
 import 'rmc-date-picker/assets/index.css';
 import { MONTHS_IN_YEAR } from '../../../utils/constants';
+import { black25, orange } from '../../../themes/theme';
 
 const TIME_OF_DAY = ['Morning', 'Afternoon', 'Evening', 'All Day'];
 const TIME_OF_DAY_MAP = {
@@ -34,7 +35,7 @@ export default function CreateTask(props) {
   const [displayStartDate, showStartDate] = useState(false);
   const [endDate, setEndDate] = useState(new Date());
   const [displayEndDate, showEndDate] = useState(false);
-  const [skillColor, setColorSelection] = useState('#FFA865');
+  const [skillColor, setColorSelection] = useState(orange);
   const [timeOfDay, setTimeOfDay] = useState(null);
   const [taskType, setTaskType] = useState(null);
   const [repeat, setRepeating] = useState(null);
@@ -98,6 +99,7 @@ export default function CreateTask(props) {
         style={{
           display: 'inline-flex',
           alignItems: 'center',
+          paddingBottom: '1rem'
         }}
       >
         <p>Skill Color</p>
@@ -108,13 +110,14 @@ export default function CreateTask(props) {
             display: 'table',
             marginLeft: '1rem',
             backgroundColor: skillColor,
-            height: '20px',
-            width: '20px',
+            height: '1.563rem',
+            width: '1.563rem',
             MozBorderRadius: '50%',
             WebkitBorderRadius: '50%',
             borderRadius: '50%',
             KhtmlBorderRadius: '50%',
             border: 'none',
+            boxShadow: `0 4px 4px 0 ${black25}`,
           }}
           onClick={() => showColorSelection(true)}
         ></button>
