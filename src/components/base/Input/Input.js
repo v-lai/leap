@@ -66,7 +66,7 @@ const Input = styled.input`
     display: block;
     width: 16.5rem;
     color: ${props => props.theme.errorColor};
-    margin-top: -2.7vh;
+    margin-top: -2.5vh;
     margin-bottom: 2vh;
     font-size: 0.7rem;
     opacity: 0;
