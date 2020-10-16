@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import DatePicker from 'react-date-picker';
+import DatePicker from 'rmc-date-picker';
 import SkillColorOptions from './SkillColorOptions';
 import { Input } from '../../base/Input/Input';
 import { Button } from '../../base/Button/Button';
 import { Container } from './styles';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import * as locale from 'rmc-date-picker/lib/locale/en_US';
+import 'rmc-picker/assets/index.css';
+import 'rmc-date-picker/assets/index.css';
+import { MONTHS_IN_YEAR } from '../../../utils/constants';
 
 const TIME_OF_DAY = ['Morning', 'Afternoon', 'Evening', 'All Day'];
 const TIME_OF_DAY_MAP = {
@@ -15,28 +19,40 @@ const TIME_OF_DAY_MAP = {
 };
 const TASK_TYPE = ['One-Time', 'Recurring'];
 
-const CreateTask = (props) => {
+function format(date) {
+  let mday = date.getDate();
+  let month = date.getMonth() + 1;
+  month = month < 10 ? `0${month}` : month;
+  mday = mday < 10 ? `0${mday}` : mday;
+  return `${date.getFullYear()}-${month}-${mday} ${date.getHours()}:${date.getMinutes()}`;
+}
+
+export default function CreateTask(props) {
   const [taskName, setTaskName] = useState('');
   const [displayColorSelection, showColorSelection] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
+  const [displayStartDate, showStartDate] = useState(false);
   const [endDate, setEndDate] = useState(new Date());
+  const [displayEndDate, showEndDate] = useState(false);
   const [skillColor, setColorSelection] = useState('#FFA865');
   const [timeOfDay, setTimeOfDay] = useState(null);
   const [taskType, setTaskType] = useState(null);
   const [repeat, setRepeating] = useState(null);
   const [everyRepeat, setEveryRepeat] = useState(null);
-  // let history = useHistory();
+  let history = useHistory();
 
-  const resetAll = () => {
-    setTaskName('');
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setColorSelection('#FFA865');
-    setTimeOfDay(null);
-    setTaskType(null);
-    setRepeating(null);
-    setEveryRepeat(null);
-  };
+  const [startDateInfo, setStartDateInfo] = useState(new Date());
+  const [endDateInfo, setEndDateInfo] = useState(new Date());
+  // const resetAll = () => {
+  //   setTaskName('');
+  //   setStartDate(new Date());
+  //   setEndDate(new Date());
+  //   setColorSelection('#FFA865');
+  //   setTimeOfDay(null);
+  //   setTaskType(null);
+  //   setRepeating(null);
+  //   setEveryRepeat(null);
+  // };
 
   const validateAndSave = () => {
     // validate
@@ -57,7 +73,7 @@ const CreateTask = (props) => {
     );
     // set values for defaults if not required
     // save & push to next task management screen
-    // history.push('/tasks'); // TODO: uncomment when routing is in place
+    history.push('/task-management');
   };
 
   return (
@@ -117,23 +133,58 @@ const CreateTask = (props) => {
         <label htmlFor="start-date" style={{ marginRight: '1rem' }}>
           Start Date
         </label>
-        <DatePicker
-          className="input"
-          onChange={(date) => setStartDate(date)}
-          value={startDate}
-          calendarType="US"
-        />
+        <div onClick={() => showStartDate(true)}>start date</div>
+        {displayStartDate && (
+          <DatePicker
+            rootNativeProps={{ 'data-xx': 'yy' }}
+            defaultDate={startDateInfo}
+            mode="date"
+            locale={locale}
+            maxDate={new Date(2024, 11, 31)}
+            minDate={new Date(2020, 0, 1)}
+            onDateChange={(date) => {
+              format(date);
+              console.log('date change', format(date), date);
+            }}
+            onValueChange={(values, index) =>
+              console.log('value change', values, index)
+            }
+            onScrollChange={(values, index) =>
+              console.log('scroll change', values, index)
+            }
+            use12Hours
+            formatMonth={(month) => MONTHS_IN_YEAR[month]}
+          />
+        )}
       </div>
       <div>
         <label htmlFor="end-date" style={{ marginRight: '1.4rem' }}>
           End Date
         </label>
-        <DatePicker
-          className="input"
-          onChange={(date) => setEndDate(date)}
-          value={endDate}
-          calendarType="US"
-        />
+        <div onClick={() => showEndDate(true)}>end date</div>
+        {displayEndDate && <div onClick={() => showEndDate(false)}>close</div>}
+        {displayEndDate && (
+          <DatePicker
+            rootNativeProps={{ 'data-xx': 'yy' }}
+            defaultDate={endDateInfo}
+            mode="date"
+            locale={locale}
+            maxDate={new Date(2024, 11, 31)}
+            minDate={new Date(2020, 0, 1)}
+            onDateChange={(date) => {
+              format(date);
+              console.log('date change', date);
+            }}
+            onValueChange={(values, index) =>
+              console.log('value change', values, index)
+            }
+            onScrollChange={(values, index) =>
+              console.log('scroll change', values, index)
+            }
+            use12Hours
+            formatMonth={(month) => MONTHS_IN_YEAR[month]}
+          />
+        )}
       </div>
       <div
         style={{
@@ -246,7 +297,7 @@ const CreateTask = (props) => {
             minWidth: '40%',
             lineHeight: '1.5rem',
           }}
-          onClick={() => resetAll()}
+          onClick={() => history.push('/task-management')}
         >
           Cancel
         </Button>
@@ -266,6 +317,4 @@ const CreateTask = (props) => {
       </div>
     </Container>
   );
-};
-
-export default CreateTask;
+}

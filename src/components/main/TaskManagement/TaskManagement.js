@@ -1,22 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import Task from './Task';
 import { TaskManageContainer } from './styles';
-import { Task } from './Task';
+import { MONTHS_IN_YEAR } from '../../../utils/constants';
 
 const DAYS_IN_WEEK = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
-const MONTHS_IN_YEAR = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+
 const setUpWeekView = () => {
   const datesInWeek = new Array(DAYS_IN_WEEK.length);
   const now = new Date('2020', '8', '3'); // FIXME: use as a test: new Date('2020', '8', '3')
@@ -55,8 +44,9 @@ const setUpWeekView = () => {
   return { month, datesInWeek, today, flip };
 };
 
-const TaskManagement = () => {
+export default function TaskManagement() {
   const { month, datesInWeek, today, flip } = setUpWeekView();
+  let history = useHistory();
   return (
     <>
       <TaskManageContainer>
@@ -66,7 +56,9 @@ const TaskManagement = () => {
             boxShadow: '0 2pt 4pt rgba(0, 0, 0, 0.2)',
             padding: '0.2rem',
             margin: '0 4rem 1rem 4rem',
+            cursor: 'pointer',
           }}
+          onClick={() => history.push('/calendar')}
         >
           {month}
         </div>
@@ -143,12 +135,10 @@ const TaskManagement = () => {
           alignItems: 'center',
         }}
       >
-        <div>list</div>
-        <div>plus</div>
+        <div onClick={() => history.push('/task-management')}>list</div>
+        <div onClick={() => history.push('/createtask')}>plus</div>
         <div>user</div>
       </div>
     </>
   );
-};
-
-export default TaskManagement;
+}

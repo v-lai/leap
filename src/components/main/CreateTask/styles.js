@@ -15,8 +15,17 @@ const Container = styled.div`
     width: min(80vw, 400px);
   }
 
-  .react-date-picker {
-    background-color: #FFF;
+  .rmc-date-picker {
+    & .rmc-picker:nth-child(1) {
+      order: 2;
+    }
+    & .rmc-picker:nth-child(2) {
+      order: 1;
+      flex: 2 2 0% !important;
+    }
+    & .rmc-picker:nth-child(3) {
+      order: 0;
+    }
   }
 `;
 
