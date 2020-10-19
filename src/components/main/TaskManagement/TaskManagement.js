@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Task from './Task';
 import { TaskManageContainer } from './styles';
 import { MONTHS_IN_YEAR } from '../../../utils/constants';
+import Calendar from './Calendar';
+import { Button } from '../../base/Button/Button';
 
 const DAYS_IN_WEEK = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
 
@@ -41,27 +43,34 @@ const setUpWeekView = () => {
     yesterdayOfWeek--;
   }
   console.log('datesInWeek', datesInWeek); // TODO: remove log
-  return { month, datesInWeek, today, flip };
+  return { month, datesInWeek, today, flip, now };
 };
 
 export default function TaskManagement() {
-  const { month, datesInWeek, today, flip } = setUpWeekView();
+  const { month, datesInWeek, today, flip, now } = setUpWeekView();
+  const [displayCalendar, showCalendar] = useState(false);
+
   let history = useHistory();
   return (
     <>
+      {displayCalendar && (
+        <Calendar date={now} showCalendar={showCalendar} displayCalendar={displayCalendar} />
+      )}
       <TaskManageContainer>
-        <div
+        <Button
           style={{
+            background: 'none',
             border: 'none',
             boxShadow: '0 2pt 4pt rgba(0, 0, 0, 0.2)',
             padding: '0.2rem',
             margin: '0 4rem 1rem 4rem',
             cursor: 'pointer',
+            width: '10rem',
           }}
-          onClick={() => history.push('/calendar')}
+          onClick={() => showCalendar(true)}
         >
           {month}
-        </div>
+        </Button>
         <div
           style={{
             display: 'grid',
