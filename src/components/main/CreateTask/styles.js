@@ -15,7 +15,6 @@ const Container = styled.div`
     line-height: normal;
   }
 
-
   #start-date,
   #end-date {
     width: auto;
