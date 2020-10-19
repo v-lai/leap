@@ -73,7 +73,7 @@ export default function SkillColorOptions({
         Click to select a color
       </p>
       {COLOR_OPTIONS.map((color) => (
-        <button
+        <Button
           key={color}
           type="button"
           aria-label={`color-${color}`}
