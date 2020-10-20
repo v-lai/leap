@@ -5,14 +5,14 @@ import { Input } from '../../base/Input/Input';
 import { Button } from '../../base/Button/Button';
 import { Container } from './styles';
 import { useHistory } from 'react-router-dom';
-import { black25, darkNavy, orange, paleSalmon } from '../../../themes/theme';
+import { black25, darkNavy, orange } from '../../../themes/theme';
 
-const TIME_OF_DAY = ['Morning', 'Afternoon', 'Evening', 'All Day'];
+const TIME_OF_DAY = ['in the morning', 'in the afternoon', 'in the evening', 'all day'];
 const TIME_OF_DAY_MAP = {
-  Morning: 'morning',
-  Afternoon: 'afternoon',
-  Evening: 'evening',
-  'All Day': 'all-day',
+  'in the morning': 'morning',
+  'in the afternoon': 'afternoon',
+  'in the evening': 'evening',
+  'all day': 'all-day',
 };
 const TASK_TYPE = ['One-Time', 'Recurring'];
 
@@ -281,11 +281,11 @@ export default function CreateTask(props) {
             className="button"
             aria-label="cancel"
             style={{
-              backgroundColor: paleSalmon,
+              backgroundColor: orange,
               minWidth: '60%',
               width: '4.375rem',
               height: '1.875rem',
-              borderColor: paleSalmon,
+              borderColor: orange,
               lineHeight: '1.875',
             }}
             onClick={() => history.push('/task-management')}
@@ -299,11 +299,11 @@ export default function CreateTask(props) {
             className="button"
             aria-label="save"
             style={{
-              backgroundColor: paleSalmon,
+              backgroundColor: orange,
               minWidth: '60%',
               width: '4.375rem',
               height: '1.875rem',
-              borderColor: paleSalmon,
+              borderColor: orange,
               lineHeight: '1.875',
             }}
             onClick={() => validateAndSave()}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { darkNavy, white } from '../../../themes/theme';
 
 export default function Task({ color, text }) {
   return (
@@ -6,7 +7,7 @@ export default function Task({ color, text }) {
       style={{
         padding: '1rem',
         marginBottom: '0.3rem',
-        backgroundColor: '#faf9f9',
+        backgroundColor: white,
         borderRadius: '0.5rem',
         boxShadow: '0 4pt 4pt rgba(0, 0 , 0, 0.25)',
         display: 'flex',
@@ -26,7 +27,7 @@ export default function Task({ color, text }) {
           margin: '0 0.8rem 0 0',
         }}
       ></p>
-      <span style={{ color: '#16425B' }}>{text}</span>
+      <span style={{ color: darkNavy }}>{text}</span>
     </div>
   );
 }
