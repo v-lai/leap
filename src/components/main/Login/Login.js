@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Route, Link } from 'react-router-dom';
-import { Transition } from 'react-transition-group';
+// import { Transition } from 'react-transition-group';
 import { LoginContainer } from './styles';
 import { Input } from '../../base/Input/Input';
 import image from './leapLogo.png';
@@ -10,7 +10,7 @@ import firebaseInit from '../../../firebase';
 
 const { auth } = firebaseInit;
 
-const EMAIL_REGEX= /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+const EMAIL_REGEX= /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/; // eslint-disable-line
 
 const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*.,?]).{6,}/;
 
@@ -140,7 +140,7 @@ function LoginWrapper (props) {
       <div>
         <Input type='button' value='Google' /><br/>
         <p>{values.signup ? 'Already have an account?' : 'Don\'t have an account?'}
-          <a onClick={() => setValues({...values, signup: !values.signup})}>
+          <a onClick={() => setValues({...values, signup: !values.signup})}> {/* eslint-disable-line */}
             {values.signup ? " Login in" : " Sign up"} here
           </a>
         </p>
