@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import store from './store';
 import GlobalStyle from './globalStyles.js';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -9,12 +11,14 @@ import { lightTheme } from './themes/theme.js';
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={ lightTheme }>
-      <GlobalStyle />
-      <Router>  
-        <App />
-      </Router>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={ lightTheme }>
+        <GlobalStyle />
+        <Router>
+          <App />
+        </Router>
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

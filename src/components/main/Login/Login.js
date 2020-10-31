@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 // import { Transition } from 'react-transition-group';
 import { LoginContainer } from './styles';
 import { Input } from '../../base/Input/Input';
 import image from './leapLogo.png';
 import { H1 } from '../../base/Text/Text';
-import { useHistory } from 'react-router-dom';
+import { setAuthUser } from '../../../actions';
 import firebaseInit from '../../../firebase';
 
 const { auth } = firebaseInit;
@@ -34,6 +35,7 @@ function LoginWrapper (props) {
       .createUserWithEmailAndPassword(values.email, values.password)
       .then(data => {
         console.log('data', data); //FIXME:
+        props.onSetAuthUser(data);
         history.push('/task-management');
       })
       .catch(err => {
@@ -48,6 +50,7 @@ function LoginWrapper (props) {
       .signInWithEmailAndPassword(values.email, values.password)
       .then(data => {
         console.log('data', data); //FIXME:
+        props.onSetAuthUser(data);
         history.push('/task-management');
       })
       .catch(err => {
@@ -195,8 +198,32 @@ function ForgetPassword (props) {
   )
 }
 
+const mapStateToProps = (state) => ({
+  authUser: state.session.authUser
+});
 
+const mapDispatchToProps = (dispatch) => ({
+  onSetAuthUser: (authUser) => {
+    if (!authUser.user) return;
+    const { uid, displayName, email } = authUser.user;
+    const { providerId } = authUser.additionalUserInfo;
+    const itemsToSet = {
+      uid,
+      displayName,
+      email,
+      providerId
+    };
+    localStorage.setItem('authUser', JSON.stringify(itemsToSet));
+    dispatch(setAuthUser(itemsToSet));
+  },
+});
 
+const LoginReduxContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
+const WrappedLogin = LoginReduxContainer(LoginWrapper);
 
 export default function Login (props) {
   return (
@@ -218,8 +245,8 @@ export default function Login (props) {
       </Route>
 
       <Route exact path='/login'>
-        <LoginWrapper />
+        <WrappedLogin />
       </Route>
     </LoginContainer>
-  )
+  );
 }
