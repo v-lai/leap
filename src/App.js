@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch, Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Login from './components/main/Login/Login';
 import { Container } from './components/base/Container/Container';
 import CreateTask from './components/main/CreateTask/CreateTask';
 import Calendar from './components/main/TaskManagement/Calendar';
 import TaskManagement from './components/main/TaskManagement/TaskManagement';
 import styled from 'styled-components';
+import { setAuthUser } from './actions';
 import firebaseInit from './firebase';
 
 const { auth } = firebaseInit;
@@ -41,63 +43,40 @@ function Navigation(props) {
   );
 }
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      authenticated: false,
-    };
-  }
-
-  componentWillMount() {
-    this.removeAuthListener = auth.onAuthStateChanged((user) => {
+class App extends Component {
+  componentDidMount() {
+    this.listener = auth.onAuthStateChanged(user => {
       if (user) {
-        this.setState({
-          authenticated: true,
-        });
+        this.props.onSetAuthUser(JSON.parse(localStorage.getItem('authUser')));
       } else {
-        this.setState({
-          authenticated: false,
-        });
+        localStorage.removeItem('authUser');
+        this.props.onSetAuthUser(null);
       }
     });
   }
 
   componentWillUnmount() {
-    this.removeAuthListener();
+    this.listener();
   }
 
   render() {
-    const AuthedRoute = ({ component: AuthedComponent, ...rest }) => {
-      if (this.state.authenticated) {
-        return (
-          <Route
-            {...rest}
-            render={() => (
-              <AuthedComponent authenticated={this.state.authenticated} />
-            )}
-          />
-        );
-      }
-      return null;
-    };
-
+    const { authenticated } = this.props;
     return (
       <Switch>
         <Route path="/login">
           <Login />
         </Route>
 
-        <AuthedRoute path="/createtask">
-          <CreateTask />
-        </AuthedRoute>
+        <Route path="/createtask">
+          {authenticated ? <CreateTask /> : <Redirect to="/login" />}
+        </Route>
 
-        <AuthedRoute path="/task-management">
-          <TaskManagement />
-        </AuthedRoute>
+        <Route path="/task-management">
+          {authenticated ? <TaskManagement /> : <Redirect to="/login" />}
+        </Route>
 
         <Route path="/calendar">
-          <Calendar />
+          {authenticated ? <Calendar /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/">
@@ -106,4 +85,18 @@ export default class App extends Component {
       </Switch>
     );
   }
-}
+};
+
+const mapStateToProps = (state) => ({
+  authenticated: !!state.session.authUser
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onSetAuthUser: (authUser) => {
+    dispatch(setAuthUser(authUser));
+  },
+});
+
+
+const AppReduxContainer = connect(mapStateToProps, mapDispatchToProps);
+export default AppReduxContainer(App);
