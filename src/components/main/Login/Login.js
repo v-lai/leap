@@ -9,7 +9,7 @@ import { H1 } from '../../base/Text/Text';
 import { setAuthUser } from '../../../actions';
 import firebaseInit from '../../../firebase';
 
-const { auth } = firebaseInit;
+const { auth, firestore } = firebaseInit;
 
 const EMAIL_REGEX= /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/; // eslint-disable-line
 
@@ -34,9 +34,25 @@ function LoginWrapper (props) {
     auth
       .createUserWithEmailAndPassword(values.email, values.password)
       .then(data => {
-        console.log('data', data); //FIXME:
-        props.onSetAuthUser(data);
-        history.push('/task-management');
+        const { uid, displayName, email } = data.user;
+        const { providerId } = data.additionalUserInfo;
+        const itemsToSet = {
+          uid,
+          displayName,
+          email,
+          providerId,
+        };
+        const usersRef = firestore.collection('users');
+        usersRef
+          .doc(uid)
+          .set(itemsToSet)
+          .then(() => {
+            props.onSetAuthUser(data);
+            history.push('/task-management');
+          })
+          .catch((error) => {
+            console.log('user save error', error);
+          });
       })
       .catch(err => {
         console.log('error', err);
@@ -49,7 +65,6 @@ function LoginWrapper (props) {
     auth
       .signInWithEmailAndPassword(values.email, values.password)
       .then(data => {
-        console.log('data', data); //FIXME:
         props.onSetAuthUser(data);
         history.push('/task-management');
       })
