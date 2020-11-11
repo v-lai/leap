@@ -14,3 +14,5 @@ export const MONTHS_IN_YEAR = [
 ];
 
 export const DAYS_IN_MONTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // don't forget about leap years
+
+export const DAYS_IN_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
