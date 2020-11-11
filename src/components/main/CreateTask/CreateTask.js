@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import SkillColorOptions from './SkillColorOptions';
 import { Input } from '../../base/Input/Input';
 import { Button } from '../../base/Button/Button';
 import { Container } from './styles';
-import { useHistory } from 'react-router-dom';
 import { black25, darkNavy, orange } from '../../../themes/theme';
+import { addTask } from '../../../actions';
+import {
+  createRepetitiveTasks,
+  createTasksFromStartToEnd
+} from '../../../utils/tasks';
 
 const TIME_OF_DAY = ['in the morning', 'in the afternoon', 'in the evening', 'all day'];
 const TIME_OF_DAY_MAP = {
@@ -45,7 +51,7 @@ const modalStyles = {
 
 Modal.setAppElement('#modal');
 
-export default function CreateTask(props) {
+const CreateTask = (props) => {
   const today = new Date();
   const [taskName, setTaskName] = useState('');
   const [displayColorSelection, showColorSelection] = useState(false);
@@ -58,7 +64,7 @@ export default function CreateTask(props) {
   const [everyRepeat, setEveryRepeat] = useState(null);
   let history = useHistory();
 
-  const validateAndSave = () => {
+  const validateAndSave = (onAddTask) => {
     // validate
     if (!taskName || !taskType) {
       console.log('show a warning about missing taskName/taskType');
@@ -76,6 +82,16 @@ export default function CreateTask(props) {
       everyRepeat
     );
     // set values for defaults if not required
+    onAddTask({
+      taskName,
+      skillColor,
+      startDate,
+      endDate,
+      timeOfDay,
+      taskType,
+      repeat,
+      everyRepeat,
+    });
     // save & push to next task management screen
     history.push('/task-management');
   };
@@ -306,7 +322,7 @@ export default function CreateTask(props) {
               borderColor: orange,
               lineHeight: '1.875',
             }}
-            onClick={() => validateAndSave()}
+            onClick={() => validateAndSave(props.onAddTask)}
           >
             Save
           </Button>
@@ -315,3 +331,28 @@ export default function CreateTask(props) {
     </Container>
   );
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  onAddTask: (task) => {
+    // FIXME: write to firebase; future work possible to ask user to confirm choices of dates prior to save as well as deleting an event or series of events.
+    const timestamp = Date.now();
+    if (task.taskType === 'recurring' && task.everyRepeat !== 'day') {
+      const tasks = createRepetitiveTasks(task, timestamp);
+      console.log('repetitive tasks', tasks);
+      dispatch(addTask(tasks));
+    } else {
+      // TODO: right now there is no mechanism for reminding during the day - so it's essentially just 1x a day from start to end date
+      if (!task.repeat) {
+        delete task.repeat;
+        delete task.everyRepeat;
+      }
+      const tasks = createTasksFromStartToEnd(task, timestamp);
+      console.log('tasks', tasks);
+      dispatch(addTask(tasks));
+    }
+  }
+});
+
+const CreateTaskReduxContainer = connect(null, mapDispatchToProps);
+
+export default CreateTaskReduxContainer(CreateTask);
