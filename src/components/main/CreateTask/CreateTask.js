@@ -12,15 +12,14 @@ import {
   createRepetitiveTasks,
   createTasksFromStartToEnd
 } from '../../../utils/tasks';
+import {
+  TASK_TYPE,
+  TIME_OF_DAY,
+  TIME_OF_DAY_MAP
+} from '../../../utils/constants';
+import firebaseInit from '../../../firebase';
 
-const TIME_OF_DAY = ['in the morning', 'in the afternoon', 'in the evening', 'all day'];
-const TIME_OF_DAY_MAP = {
-  'in the morning': 'morning',
-  'in the afternoon': 'afternoon',
-  'in the evening': 'evening',
-  'all day': 'all-day',
-};
-const TASK_TYPE = ['One-Time', 'Recurring'];
+const { firestore } = firebaseInit;
 
 function format(date) {
   let mday = date.getDate();
@@ -64,7 +63,7 @@ const CreateTask = (props) => {
   const [everyRepeat, setEveryRepeat] = useState(null);
   let history = useHistory();
 
-  const validateAndSave = (onAddTask) => {
+  const validateAndSave = (onAddTask, uid) => {
     // validate
     if (!taskName || !taskType) {
       console.log('show a warning about missing taskName/taskType');
@@ -91,7 +90,7 @@ const CreateTask = (props) => {
       taskType,
       repeat,
       everyRepeat,
-    });
+    }, uid);
     // save & push to next task management screen
     history.push('/task-management');
   };
@@ -322,7 +321,7 @@ const CreateTask = (props) => {
               borderColor: orange,
               lineHeight: '1.875',
             }}
-            onClick={() => validateAndSave(props.onAddTask)}
+            onClick={() => validateAndSave(props.onAddTask, props.uid)}
           >
             Save
           </Button>
@@ -332,13 +331,29 @@ const CreateTask = (props) => {
   );
 }
 
+const mapStateToProps = (state) => ({
+  uid: state.session.authUser && state.session.authUser.uid
+});
+
 const mapDispatchToProps = (dispatch) => ({
-  onAddTask: (task) => {
-    // FIXME: write to firebase; future work possible to ask user to confirm choices of dates prior to save as well as deleting an event or series of events.
+  onAddTask: (task, uid) => {
+    // FIXME: future work possible to ask user to confirm choices of dates prior to save as well as deleting an event or series of events.
     const timestamp = Date.now();
+    const batch = firestore.batch();
+    const userTaskRef = firestore.collection('users').doc(uid);
     if (task.taskType === 'recurring' && task.everyRepeat !== 'day') {
       const tasks = createRepetitiveTasks(task, timestamp);
       console.log('repetitive tasks', tasks);
+      for (const task in tasks) {
+        batch.set(userTaskRef.collection('tasks').doc(task), tasks[task]);
+      }
+      batch.commit()
+        .then(function () {
+          console.log('Repeating tasks successfully added!');
+        })
+        .catch(function (error) {
+          console.error('Error adding repeating tasks: ', error);
+        });
       dispatch(addTask(tasks));
     } else {
       // TODO: right now there is no mechanism for reminding during the day - so it's essentially just 1x a day from start to end date
@@ -347,12 +362,23 @@ const mapDispatchToProps = (dispatch) => ({
         delete task.everyRepeat;
       }
       const tasks = createTasksFromStartToEnd(task, timestamp);
+      for (const task in tasks) {
+        batch.set(userTaskRef.collection('tasks').doc(task), tasks[task]);
+      }
+      batch
+        .commit()
+        .then(function () {
+          console.log('Tasks successfully added!');
+        })
+        .catch(function (error) {
+          console.error('Error adding tasks: ', error);
+        });
       console.log('tasks', tasks);
       dispatch(addTask(tasks));
     }
   }
 });
 
-const CreateTaskReduxContainer = connect(null, mapDispatchToProps);
+const CreateTaskReduxContainer = connect(mapStateToProps, mapDispatchToProps);
 
 export default CreateTaskReduxContainer(CreateTask);
