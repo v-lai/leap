@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Task from './Task';
 import { TaskManageContainer } from './styles';
 import { MONTHS_IN_YEAR } from '../../../utils/constants';
@@ -10,8 +11,7 @@ const DAYS_IN_WEEK = ['S', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
 
 const setUpWeekView = () => {
   const datesInWeek = new Array(DAYS_IN_WEEK.length);
-  const now = new Date('2020', '8', '3'); // FIXME: use as a test: new Date('2020', '8', '3')
-  console.log('now', now); // TODO: remove log
+  const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth();
   const month = MONTHS_IN_YEAR[currentMonth];
@@ -42,19 +42,51 @@ const setUpWeekView = () => {
     yesterday--;
     yesterdayOfWeek--;
   }
-  console.log('datesInWeek', datesInWeek); // TODO: remove log
   return { month, datesInWeek, today, flip, now };
 };
 
-export default function TaskManagement() {
+const TaskManagement = ({ tasks }) => {
   const { month, datesInWeek, today, flip, now } = setUpWeekView();
   const [displayCalendar, showCalendar] = useState(false);
 
   let history = useHistory();
+
+  const setUpTasks =
+    tasks &&
+    Object.values(tasks).reduce((acc, task) => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1;
+      const day = today.getDate();
+      if (task.actual !== `${year}-${month}-${day}`) {
+        return acc;
+      }
+      let timeOfDay = task.timeOfDay.split('-').join(' ');
+      const casedTimeOfDay = timeOfDay[0].toUpperCase().concat(timeOfDay.slice(1));
+      const taskComponent = <Task key={task.timestamp} color={task.skillColor} text={task.taskName} />;
+      if (casedTimeOfDay === 'All day') {
+        acc[0].push(taskComponent);
+      }
+      if (casedTimeOfDay === 'Morning') {
+        acc[1].push(taskComponent);
+      }
+      if (casedTimeOfDay === 'Afternoon') {
+        acc[2].push(taskComponent);
+      }
+      if (casedTimeOfDay === 'Evening') {
+        acc[3].push(taskComponent);
+      }
+      return acc;
+    }, [[], [], [], []]);
+
   return (
     <>
       {displayCalendar && (
-        <Calendar date={now} showCalendar={showCalendar} displayCalendar={displayCalendar} />
+        <Calendar
+          date={now}
+          showCalendar={showCalendar}
+          displayCalendar={displayCalendar}
+        />
       )}
       <TaskManageContainer>
         <Button
@@ -122,15 +154,13 @@ export default function TaskManagement() {
         </div>
         <div style={{ textAlign: 'initial' }}>
           <p>All Day</p>
-          <Task color="#6AA4BC" text="Talk to 3 people in UX Facebook Group" />
+          {setUpTasks[0].map(timeInDay => timeInDay)}
           <p>Morning</p>
-          <Task color="#B180BB" text="Complete Online UX Course Chapter 5" />
-          <Task color="#AEDFD6" text="Do Day 15 UI Challenge" />
+          {setUpTasks[1].map(timeInDay => timeInDay)}
           <p>Afternoon</p>
-          <Task color="#AEDFD6" text="Practice wireframing" />
+          {setUpTasks[2].map(timeInDay => timeInDay)}
           <p>Evening</p>
-          <Task color="#FFA865" text="Learn how to conduct user interviews" />
-          <Task color="#FFA865" text="Watch video on research methods" />
+          {setUpTasks[3].map(timeInDay => timeInDay)}
         </div>
       </TaskManageContainer>
       <div
@@ -151,3 +181,10 @@ export default function TaskManagement() {
     </>
   );
 }
+
+const mapStateToProps = (state) => ({
+  tasks: state.tasks
+});
+
+const TaskManagementReduxContainer = connect(mapStateToProps);
+export default TaskManagementReduxContainer(TaskManagement);

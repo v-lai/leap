@@ -7,10 +7,10 @@ import CreateTask from './components/main/CreateTask/CreateTask';
 import Calendar from './components/main/TaskManagement/Calendar';
 import TaskManagement from './components/main/TaskManagement/TaskManagement';
 import styled from 'styled-components';
-import { setAuthUser } from './actions';
+import { setAuthUser, setTasks } from './actions';
 import firebaseInit from './firebase';
 
-const { auth } = firebaseInit;
+const { auth, firestore } = firebaseInit;
 
 const NavContainer = styled(Container)`
   & > ul > li {
@@ -47,7 +47,42 @@ class App extends Component {
   componentDidMount() {
     this.listener = auth.onAuthStateChanged(user => {
       if (user) {
-        this.props.onSetAuthUser(JSON.parse(localStorage.getItem('authUser')));
+        const userRef = firestore.collection('users').doc(user.uid);
+        userRef
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const data = doc.data();
+              localStorage.setItem('authUser', JSON.stringify(data));
+              this.props.onSetAuthUser(data);
+              const today = new Date();
+              const year = today.getFullYear();
+              const month = today.getMonth() + 1;
+              const day = today.getDate();
+              // set tasks
+              userRef
+                .collection('tasks')
+                .where('actual', '==', `${year}-${month}-${day}`)
+                .get()
+                .then((querySnapshot) => {
+                  const tasks = {};
+                  querySnapshot.forEach((doc) => {
+                    tasks[doc.id] = doc.data();
+                  });
+                  this.props.onSetTasks(tasks);
+                })
+                .catch(function (error) {
+                  console.log('tasks fetch error: ', error);
+                });
+
+            } else {
+              localStorage.removeItem('authUser');
+              this.props.onSetAuthUser(null);
+            }
+          })
+          .catch((error) => {
+            console.log('user ref error', error);
+          });
       } else {
         localStorage.removeItem('authUser');
         this.props.onSetAuthUser(null);
@@ -94,6 +129,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onSetAuthUser: (authUser) => {
     dispatch(setAuthUser(authUser));
+  },
+  onSetTasks: (tasks) => {
+    dispatch(setTasks(tasks));
   },
 });
 
