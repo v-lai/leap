@@ -45,44 +45,36 @@ function Navigation(props) {
 
 class App extends Component {
   componentDidMount() {
-    this.listener = auth.onAuthStateChanged(user => {
+    this.listener = auth.onAuthStateChanged(async user => {
       if (user) {
         const userRef = firestore.collection('users').doc(user.uid);
-        userRef
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              const data = doc.data();
-              localStorage.setItem('authUser', JSON.stringify(data));
-              this.props.onSetAuthUser(data);
-              const today = new Date();
-              const year = today.getFullYear();
-              const month = today.getMonth() + 1;
-              const day = today.getDate();
-              // set tasks
-              userRef
-                .collection('tasks')
-                .where('actual', '==', `${year}-${month}-${day}`)
-                .get()
-                .then((querySnapshot) => {
-                  const tasks = {};
-                  querySnapshot.forEach((doc) => {
-                    tasks[doc.id] = doc.data();
-                  });
-                  this.props.onSetTasks(tasks);
-                })
-                .catch(function (error) {
-                  console.log('tasks fetch error: ', error);
-                });
-
-            } else {
-              localStorage.removeItem('authUser');
-              this.props.onSetAuthUser(null);
-            }
-          })
-          .catch((error) => {
-            console.log('user ref error', error);
-          });
+        try {
+          const doc = await userRef.get();
+          if (doc.exists) {
+            const data = doc.data();
+            localStorage.setItem('authUser', JSON.stringify(data));
+            this.props.onSetAuthUser(data);
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth() + 1;
+            const day = today.getDate();
+            // set tasks
+            const querySnapshot = await userRef
+              .collection('tasks')
+              .where('actual', '==', `${year}-${month}-${day}`)
+              .get();
+            const tasks = {};
+            querySnapshot.forEach((doc) => {
+              tasks[doc.id] = doc.data();
+            });
+            this.props.onSetTasks(tasks);
+          } else {
+            localStorage.removeItem('authUser');
+            this.props.onSetAuthUser(null);
+          }
+        } catch (error) {
+          console.error('Loading error', error);
+        }
       } else {
         localStorage.removeItem('authUser');
         this.props.onSetAuthUser(null);
