@@ -336,7 +336,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onAddTask: (task, uid) => {
+  onAddTask: async (task, uid) => {
     // FIXME: future work possible to ask user to confirm choices of dates prior to save as well as deleting an event or series of events.
     const timestamp = Date.now();
     const batch = firestore.batch();
@@ -347,13 +347,12 @@ const mapDispatchToProps = (dispatch) => ({
       for (const task in tasks) {
         batch.set(userTaskRef.collection('tasks').doc(task), tasks[task]);
       }
-      batch.commit()
-        .then(function () {
-          console.log('Repeating tasks successfully added!');
-        })
-        .catch(function (error) {
-          console.error('Error adding repeating tasks: ', error);
-        });
+      try {
+        await batch.commit();
+        console.log('Repeating tasks successfully added!');
+      } catch (error) {
+        console.error('Error adding repeating tasks: ', error);
+      }
       dispatch(addTask(tasks));
     } else {
       // TODO: right now there is no mechanism for reminding during the day - so it's essentially just 1x a day from start to end date
@@ -365,14 +364,12 @@ const mapDispatchToProps = (dispatch) => ({
       for (const task in tasks) {
         batch.set(userTaskRef.collection('tasks').doc(task), tasks[task]);
       }
-      batch
-        .commit()
-        .then(function () {
-          console.log('Tasks successfully added!');
-        })
-        .catch(function (error) {
-          console.error('Error adding tasks: ', error);
-        });
+      try {
+        await batch.commit();
+        console.log('Tasks successfully added!');
+      } catch (error) {
+        console.error('Error adding repeating tasks: ', error);
+      }
       console.log('tasks', tasks);
       dispatch(addTask(tasks));
     }
