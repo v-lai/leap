@@ -83,7 +83,7 @@ const TaskManagement = ({ tasks }) => {
     <>
       {displayCalendar && (
         <Calendar
-          date={now}
+          today={now}
           showCalendar={showCalendar}
           displayCalendar={displayCalendar}
         />
@@ -183,7 +183,7 @@ const TaskManagement = ({ tasks }) => {
 }
 
 const mapStateToProps = (state) => ({
-  tasks: state.tasks
+  tasks: state.allTasks.tasks
 });
 
 const TaskManagementReduxContainer = connect(mapStateToProps);

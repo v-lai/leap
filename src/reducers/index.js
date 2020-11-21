@@ -4,7 +4,7 @@ import tasksReducer from './tasks';
 
 const rootReducer = combineReducers({
   session: sessionReducer,
-  tasks: tasksReducer
+  allTasks: tasksReducer
 });
 
 export default rootReducer;

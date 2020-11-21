@@ -9,10 +9,11 @@ export function setAuthUser(authUser) {
   };
 }
 
-export function setTasks(tasks) {
+export function setTasks(tasks, dates) {
   return {
     type: TASKS_SET,
-    tasks
+    tasks,
+    dates
   };
 }
 
