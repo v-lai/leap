@@ -1,14 +1,32 @@
 import { TASKS_SET, TASKS_ADD } from '../actions';
 
-const initialState = {};
+const initialState = {
+  tasks: {},
+  dates: []
+};
 
 function tasksReducer(state = initialState, action) {
   switch (action.type) {
-    case TASKS_SET:
+    case TASKS_SET: {
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          ...action.tasks,
+        },
+        dates: [
+          ...state.dates,
+          ...action.dates
+        ]
+      };
+    }
     case TASKS_ADD: {
       return {
         ...state,
-        ...action.tasks,
+        tasks: {
+          ...state.tasks,
+          ...action.tasks
+        }
       };
     }
     default:

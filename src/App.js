@@ -58,16 +58,17 @@ class App extends Component {
             const year = today.getFullYear();
             const month = today.getMonth() + 1;
             const day = today.getDate();
+            const actual = `${year}-${month}-${day}`;
             // set tasks
             const querySnapshot = await userRef
               .collection('tasks')
-              .where('actual', '==', `${year}-${month}-${day}`)
+              .where('actual', '==', actual)
               .get();
             const tasks = {};
             querySnapshot.forEach((doc) => {
               tasks[doc.id] = doc.data();
             });
-            this.props.onSetTasks(tasks);
+            this.props.onSetTasks(tasks, [actual]);
           } else {
             localStorage.removeItem('authUser');
             this.props.onSetAuthUser(null);
@@ -122,8 +123,8 @@ const mapDispatchToProps = (dispatch) => ({
   onSetAuthUser: (authUser) => {
     dispatch(setAuthUser(authUser));
   },
-  onSetTasks: (tasks) => {
-    dispatch(setTasks(tasks));
+  onSetTasks: (tasks, dates) => {
+    dispatch(setTasks(tasks, dates));
   },
 });
 
