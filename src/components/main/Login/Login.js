@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // import { Transition } from 'react-transition-group';
 import { LoginContainer } from './styles';
 import { Input } from '../../base/Input/Input';
-import image from './leapLogo.png';
+import leapLogo from '../../../leapLogo.png';
 import { H1 } from '../../base/Text/Text';
 import { setAuthUser } from '../../../actions';
 import firebaseInit from '../../../firebase';
@@ -19,7 +19,7 @@ const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-+_!@#$%^&*.,?]).{6,
 function LoginWrapper (props) {
   let history = useHistory();
   const [values, setValues] = useState({
-    email: '', password: '', confirmPassword: '', signup: false, errorMessage: ''
+    email: '', password: '', confirmPassword: '', signup: props.signup || false, errorMessage: ''
   });
   const updateValue = (e) => {
     setValues({ ...values, errorMessage: '', [e.target.name]: e.target.value });
@@ -277,7 +277,7 @@ export default function Login (props) {
   return (
     <LoginContainer>
       <img
-        src={image}
+        src={leapLogo}
         alt='Leap Logo'
         style={{
           width: '4rem',
