@@ -1,45 +1,61 @@
 import React, { Component } from 'react';
-import { Route, Switch, Link, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Login from './components/main/Login/Login';
+import { Button } from './components/base/Button/Button';
 import { Container } from './components/base/Container/Container';
 import CreateTask from './components/main/CreateTask/CreateTask';
 import Calendar from './components/main/TaskManagement/Calendar';
 import TaskManagement from './components/main/TaskManagement/TaskManagement';
-import styled from 'styled-components';
 import { setAuthUser, setTasks } from './actions';
+import styled from 'styled-components';
+import { orange } from './themes/theme';
+import leapLogo from './leapLogo.png';
 import firebaseInit from './firebase';
 
 const { auth, firestore } = firebaseInit;
 
-const NavContainer = styled(Container)`
+const SplashContainer = styled(Container)`
   & > ul > li {
     margin: 1rem;
     text-align: center;
   }
 `;
 
-function Navigation(props) {
+const Splash = () => {
+  const history = useHistory();
   return (
-    <NavContainer style={{ justifyContent: 'center', fontSize: '1.5rem' }}>
-      <ul>
-        <li>
-          <Link to="/login">Login Component</Link>
-        </li>
-
-        {/*
-          Declare your own custom routes here!
-          This will aid in testing.
-        */}
-
-        <li>
-          <Link to="/createtask">Create Task</Link>
-        </li>
-        <li>
-          <Link to="/task-management">TaskManagement Component</Link>
-        </li>
-      </ul>
-    </NavContainer>
+    <SplashContainer style={{ justifyContent: 'center', fontSize: '1.5rem' }}>
+      <img
+        src={leapLogo}
+        alt="Leap Logo"
+        style={{
+          width: '4rem',
+          height: '4rem',
+          margin: '30vh auto 36vh auto',
+          boxShadow:
+            '0px 6px 10px rgba(0, 0 , 0, 0.3), -6px -6px 10px rgba(0, 0 , 0, 0.3) ',
+          borderRadius: '6px',
+        }}
+      />
+      <Button
+        type="submit"
+        className="button"
+        aria-label="get started"
+        style={{
+          backgroundColor: orange,
+          minWidth: '60%',
+          width: '4.375rem',
+          height: '2.5rem',
+          borderColor: orange,
+          lineHeight: '2.5',
+          fontSize: '1rem'
+        }}
+        onClick={() => history.push('/login', { signup: true })}
+      >
+        Get Started
+      </Button>
+    </SplashContainer>
   );
 }
 
@@ -108,7 +124,7 @@ class App extends Component {
         </Route>
 
         <Route path="/">
-          <Navigation />
+          <Splash />
         </Route>
       </Switch>
     );
@@ -116,7 +132,7 @@ class App extends Component {
 };
 
 const mapStateToProps = (state) => ({
-  authenticated: !!state.session.authUser
+  authenticated: !!localStorage.getItem('authUser') || !!state.session.authUser
 });
 
 const mapDispatchToProps = (dispatch) => ({
